@@ -1,0 +1,23 @@
+{
+  "filters": {
+    "make": {
+      "filterType": "text",
+      "type": "contains",
+      "filter": "ada"
+    },
+    "model": {
+      "filterType": "text",
+      "operator": "AND",
+      "condition1": {
+        "filterType": "text",
+        "type": "contains",
+        "filter": "asd"
+      },
+      "condition2": {
+        "filterType": "text",
+        "type": "contains",
+        "filter": "asd"
+      }
+    }
+  }
+}

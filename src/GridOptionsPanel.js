@@ -13,12 +13,12 @@ const GridOptionsPanel = props => {
     });
   };
 
-  const updateFilterByFord = event => {
-    const makeFilterComponent = props.gridApi.getFilterInstance("make");
-    const filterModel = event.target.checked ? { values: ["Ford"] } : null;
-    makeFilterComponent.setModel(filterModel);
-    props.gridApi.onFilterChanged();
-  };
+  // const updateFilterByFord = event => {
+  //   const makeFilterComponent = props.gridApi.getFilterInstance("make");
+  //   const filterModel = event.target.checked ? { values: ["Ford"] } : null;
+  //   makeFilterComponent.setModel(filterModel);
+  //   props.gridApi.onFilterChanged();
+  // };
 
   const updateSortPriceAsc = event => {
     let priceSort = event.target.checked ? "asc" : null;
@@ -43,7 +43,7 @@ const GridOptionsPanel = props => {
           Group by "Make"
         </label>
       </span>
-      <span className="form-check">
+      {/* <span className="form-check">
         <input
           className="form-check-input"
           type="checkbox"
@@ -53,7 +53,7 @@ const GridOptionsPanel = props => {
         <label className="form-check-label" for="grid-setting-filter-ford">
           Filter by "Ford"
         </label>
-      </span>
+      </span> */}
       <span className="form-check">
         <input
           className="form-check-input"

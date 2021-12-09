@@ -6,20 +6,16 @@ export const columnDefs = [
         maxWidth: 50,
         pdfExportOptions: {
           skipColumn: true
-        }
+        },
+        lockPosition: true
         
     },
     {
       headerName: "Make",
       field: "make",
-      colId: "make",
-      editable: true,
-      filter: 'agTextColumnFilter',
-      filterParams: {
-        buttons: ['reset', 'apply'],
-      },
-      aggFunc: "count"
+      suppressMovable: true,
+      lockPosition: true
     },
-    { headerName: "Model", field: "model", colId: "model", filter: 'agTextColumnFilter' },
-    { headerName: "Price", field: "price", colId: "price",  filter: 'agNumberColumnFilter'  },
+    { headerName: "Model", field: "model", colId: "model" },
+    { headerName: "Price", field: "price", colId: "price"  },
 ]

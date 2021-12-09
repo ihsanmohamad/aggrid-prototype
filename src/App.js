@@ -2,8 +2,6 @@ import { AgGridReact } from 'ag-grid-react';
 
 import { AllModules } from '@ag-grid-enterprise/all-modules';
 
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { simpleHttpRequest } from "ag-grid-community";
 
 import { useState, useEffect } from 'react';
@@ -13,8 +11,9 @@ import { columnDefs } from "./columnDefs";
 import GridOptionsPanel from "./GridOptionsPanel";
 import PDFExportPanel from "./pdfExport/PDFExportPanel.js";
 
-import "./style.css";
+import { Chip } from '@material-ui/core';
 
+import FilterMenu from './components/FilterMenu/FilterMenu';
 
 function App() {
 
@@ -39,7 +38,7 @@ function App() {
   };
 
   const onFirstDataRendered = params => {
-    params.columnApi.autoSizeAllColumns();
+    params.api.sizeColumnsToFit();
   };
 
   const onColumnEverythingChanged = params => {
@@ -47,6 +46,8 @@ function App() {
     if (selectionCol) {
       params.columnApi.moveColumn(selectionCol, 0);
     }
+    params.api.sizeColumnsToFit();
+
   };
   
   const saveFilterModel = () => {
@@ -99,43 +100,49 @@ function App() {
   }, [ savedFilterModel ])
 
   return (
-    <div className="ag-theme-alpine" style={{height: 400, width: 600}}>
-      <div className="form-wrap">
-        <GridOptionsPanel gridApi={gridApi} columnApi={columnApi} />
-        <PDFExportPanel gridApi={gridApi} columnApi={columnApi} />
-        
-      </div>
-      <button type="button" className="btn btn-primary mt-3" onClick={() => saveExcel()}>
-        Save Excel
-      </button>
-      <button type="button" className="btn btn-primary mt-3" onClick={() => saveFilterModel()}>
-        Save filter
-      </button>
-      <button type="button" className="btn btn-primary mt-3" onClick={() => restoreFilterModel()}>
-        Load filter
-      </button>
-      <button type="button" className="btn btn-primary mt-3" onClick={() => clearFilterModel()}>
-        Clear filter
-      </button>
-    <AgGridReact
-        rowData={rowData} 
-        columnDefs={columnDefs}
-        suppressPropertyNamesCheck
-        defaultColDef={{
-          filter: true,
-          sortable: true,
-          resizable: true,
-          enableRowGroup: true,
-          menuTabs: ["filterMenuTab"]
-        }}
-        groupSelectsChildren
-        rowSelection="multiple"
-        onColumnEverythingChanged={onColumnEverythingChanged}
-        onFirstDataRendered={onFirstDataRendered}
-        onGridReady={onGridReady}
-        modules={AllModules}
-        />
-</div>
+    <div className="container">
+      <div className="ag-theme-custom" style={{height: 400}}>
+        <div className="form-wrap">
+          <GridOptionsPanel gridApi={gridApi} columnApi={columnApi} />
+          <PDFExportPanel gridApi={gridApi} columnApi={columnApi} />
+          
+        </div>
+        <button type="button" className="btn btn-primary mt-3" onClick={() => saveExcel()}>
+          Save Excel
+        </button>
+        <button type="button" className="btn btn-primary mt-3" onClick={() => saveFilterModel()}>
+          Save filter
+        </button>
+        <button type="button" className="btn btn-primary mt-3" onClick={() => restoreFilterModel()}>
+          Load filter
+        </button>
+        <button type="button" className="btn btn-primary mt-3" onClick={() => clearFilterModel()}>
+          Clear filter
+        </button>
+
+      <FilterMenu />
+      {/* <Accordion /> */}
+      
+      <AgGridReact
+          rowData={rowData} 
+          columnDefs={columnDefs}
+          suppressPropertyNamesCheck
+          suppressDragLeaveHidesColumns
+          defaultColDef={{
+            flex: 1,
+            sortable: true,
+            enableRowGroup: true,
+            unSortIcon: true,
+            minWidth: 150,
+          }}
+          groupSelectsChildren
+          rowSelection="multiple"
+          onColumnEverythingChanged={onColumnEverythingChanged}
+          onFirstDataRendered={onFirstDataRendered}
+          onGridReady={onGridReady}
+          />
+    </div>
+  </div>
   );
 }
 

@@ -28,9 +28,7 @@ const PDFExportPanel = props => {
       PDF_HEADER_COLOR,
       PDF_INNER_BORDER_COLOR,
       PDF_OUTER_BORDER_COLOR,
-      PDF_LOGO,
       PDF_PAGE_ORITENTATION,
-      PDF_WITH_HEADER_IMAGE,
       PDF_WITH_FOOTER_PAGE_COUNT,
       PDF_HEADER_HEIGHT,
       PDF_ROW_HEIGHT,
@@ -76,20 +74,6 @@ const PDFExportPanel = props => {
         />
         <label className="form-check-label" for="portrait">
           Portrait
-        </label>
-      </div>
-      <div className="form-check">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          id="headerImage"
-          checked={PDF_WITH_HEADER_IMAGE}
-          onChange={event => {
-            SET_PDF_WITH_HEADER_IMAGE(event.target.checked);
-          }}
-        />
-        <label className="form-check-label" for="headerImage">
-          Header image (ag-Grid logo)
         </label>
       </div>
       <div className="form-check">

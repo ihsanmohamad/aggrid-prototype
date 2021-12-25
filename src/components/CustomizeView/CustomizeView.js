@@ -5,6 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Chip, Menu, Paper, InputBase, Divider, IconButton, FormGroup, FormControlLabel, Checkbox} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 
+import { useMenu } from '../../useMenu';
+
 const useStyles = makeStyles({
     section: {
         padding: '8px 20px',
@@ -49,26 +51,18 @@ const useStyles = makeStyles({
     }
   })
 
-const CustomChip = (props) => {
+const CustomizeView = (props) => {
     const classes = useStyles();
     
-    const [anchorEl, setAnchorEl] = useState(null);
+    const { open, handleClose } = useMenu();
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
     return (
         <div>
-            <Chip classes={{root: classes.customChip}} {...props} onClick={handleClick}/>
             <Menu
                 id="simple-menu"
-                anchorEl={anchorEl}
+                anchorEl={open}
                 keepMounted
-                open={Boolean(anchorEl)}
+                open={Boolean(open)}
                 onClose={handleClose}
                 anchorOrigin={{
                                 horizontal: 'left',
@@ -108,4 +102,4 @@ const CustomChip = (props) => {
     )
 }
 
-export default CustomChip
+export default CustomizeView

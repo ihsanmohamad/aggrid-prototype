@@ -8,7 +8,7 @@ import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-alpine.css";
 
 import { Provider } from 'react-redux';
-import { store } from './redux/store';
+import store  from './redux/store';
 
 ReactDOM.render(
   <React.StrictMode>

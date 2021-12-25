@@ -5,11 +5,19 @@ import { AllModules } from '@ag-grid-enterprise/all-modules';
 import { simpleHttpRequest } from "ag-grid-community";
 
 import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { setGridApi, setColumnApi, setRowData } from './redux/actions/agGrid'
+
+import { getBids, addBids } from './mybids'
 
 import { columnDefs } from "./columnDefs";
 
+
+import CustomizeView from './components/CustomizeView/CustomizeView'
 import GridOptionsPanel from "./GridOptionsPanel";
 import PDFExportPanel from "./pdfExport/PDFExportPanel.js";
+
+import { ActionTypes } from './redux/constants/action-types'
 
 import { Chip } from '@material-ui/core';
 
@@ -17,24 +25,25 @@ import FilterMenu from './components/FilterMenu/FilterMenu';
 
 function App() {
 
-  const [gridApi, setGridApi] = useState(null);
-  const [columnApi, setColumnApi] = useState(null);
+  const { gridApi, columnApi, rowData } = useSelector(state => state.agGrid)
 
-  const [rowData, setRowData] = useState([]);
+  const dispatch = useDispatch()
+
+  const [isVisible, setIsVisible] = useState(true)
+
   const [savedFilterModel, setSavedFilterModel] = useState({});
 
-  const onGridReady = params => {
-    setGridApi(params.api);
-    setColumnApi(params.columnApi);
+  const [open, setOpen] = useState(null)
 
-    simpleHttpRequest({
-      url: "https://www.ag-grid.com/example-assets/row-data.json"
-    }).then(function(data) {
-      data.forEach(r => {
-        r.date = new Date();
-      });
-      setRowData(data.slice(1500, 2000));
-    });
+
+  const onGridReady = params => {
+    
+    dispatch(setGridApi(params.api))
+    dispatch(setColumnApi(params.columnApi))
+
+    getBids().then(res => {
+      dispatch(setRowData(res.data))
+    })
   };
 
   const onFirstDataRendered = params => {
@@ -93,9 +102,44 @@ function App() {
   const saveExcel = () => {
     gridApi.exportDataAsCsv(params);
   }
+  
+  const onStartEdit = () => {
+    gridApi.applyTransaction({add: [{}], addIndex: 0})
+    gridApi.setFocusedCell(0, 'vehcat')
+    gridApi.startEditingCell({
+      rowIndex: 0,
+      colKey: 'vehcat'
+    })
+  }
+  const onStopEdit = () => {
+    gridApi.refreshCells({rowNode: 0, force: true})
+    const toAdd = {"id": 1000, "vehcat": "test", "bidqty": 5}
+    gridApi.applyTransaction({update:[toAdd]})
+    addBids(toAdd)
+    gridApi.stopEditing()
+  }
 
+  const toggleBidQty = () => {
+    setIsVisible(!isVisible)
+    columnApi.setColumnVisible('bidqty', isVisible)
+  }
   
-  
+  const applyState = () => {
+    columnApi.applyColumnState({
+      state: [{
+        colId: 'bidqty',
+        hide: true
+      },
+    {
+      colId: 'resprice',
+      hide: true
+    }]
+    })
+  }
+
+  const handleClose = () => {
+      setOpen(null)
+  }
   useEffect(()=> {
   }, [ savedFilterModel ])
 
@@ -119,7 +163,18 @@ function App() {
         <button type="button" className="btn btn-primary mt-3" onClick={() => clearFilterModel()}>
           Clear filter
         </button>
+        
+        <button type="button" className="btn btn-primary mt-3" onClick={() => onStartEdit()}>
+          Add Row
+        </button>
+        <button type="button" className="btn btn-primary mt-3" onClick={() => onStopEdit()}>
+          Save Row
+        </button>
+        <button type="button" className="btn btn-primary mt-3" onClick={applyState}>
+          Open Column Menu
+        </button>
 
+      <CustomizeView />
       <FilterMenu />
       {/* <Accordion /> */}
       
@@ -131,11 +186,13 @@ function App() {
           defaultColDef={{
             flex: 1,
             sortable: true,
+            filter: true,
             enableRowGroup: true,
             unSortIcon: true,
             minWidth: 150,
+            editable: true
           }}
-          groupSelectsChildren
+          editType={'fullRow'}
           rowSelection="multiple"
           onColumnEverythingChanged={onColumnEverythingChanged}
           onFirstDataRendered={onFirstDataRendered}

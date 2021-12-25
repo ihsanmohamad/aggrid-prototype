@@ -15,9 +15,7 @@ export default function getDocDefinition(
       PDF_WITH_CELL_FORMATTING,
       PDF_WITH_COLUMNS_AS_LINKS,
       PDF_SELECTED_ROWS_ONLY,
-      PDF_WITH_HEADER_IMAGE,
       PDF_WITH_FOOTER_PAGE_COUNT,
-      PDF_LOGO
     } = printParams;
   
     return (function() {
@@ -35,15 +33,6 @@ export default function getDocDefinition(
   
       const headerRows = columnGroupsToExport ? 2 : 1;
   
-      const header = PDF_WITH_HEADER_IMAGE
-        ? {
-            image: "ag-grid-logo",
-            width: 150,
-            alignment: "center",
-            margin: [0, 10, 0, 10]
-          }
-        : null;
-  
       const footer = PDF_WITH_FOOTER_PAGE_COUNT
         ? function(currentPage, pageCount) {
             return {
@@ -54,8 +43,6 @@ export default function getDocDefinition(
         : null;
   
       const pageMargins = [
-        10,
-        PDF_WITH_HEADER_IMAGE ? 70 : 20,
         10,
         PDF_WITH_FOOTER_PAGE_COUNT ? 40 : 10
       ];
@@ -88,7 +75,6 @@ export default function getDocDefinition(
   
       const docDefintiion = {
         pageOrientation: PDF_PAGE_ORITENTATION,
-        header,
         footer,
         content: [
           {
@@ -108,9 +94,7 @@ export default function getDocDefinition(
             }
           }
         ],
-        images: {
-          "ag-grid-logo": PDF_LOGO
-        },
+
         styles: {
           myTable: {
             margin: [0, 0, 0, 0]
@@ -133,7 +117,7 @@ export default function getDocDefinition(
       let displayedColumnGroups = agGridColumnApi.getAllDisplayedColumnGroups();
   
       let isColumnGrouping = displayedColumnGroups.some(col =>
-        col.hasOwnProperty("children")
+        Object.prototype.hasOwnProperty.call(col,"children")
       );
   
       if (!isColumnGrouping) {

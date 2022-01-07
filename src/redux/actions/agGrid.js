@@ -31,3 +31,19 @@ export const addRowData = data => {
         payload: data
     }
 }
+
+export const setColumns = (columnApi) => {
+    const columns = []
+    columnApi.getAllColumns().map(column => columns.push(column.colDef.colId))
+
+    return {
+        type: ActionTypes.SET_COLUMNS,
+        payload: columns
+    }
+}
+
+export const getColumns = () => {
+    return {
+        type: ActionTypes.GET_COLUMNS,
+    }
+}

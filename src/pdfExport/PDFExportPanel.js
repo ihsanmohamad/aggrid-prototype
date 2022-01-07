@@ -10,10 +10,11 @@ const PDFExportPanel = props => {
     true
   );
   const [PDF_HEADER_HEIGHT] = useState(25);
-  const [PDF_ROW_HEIGHT] = useState(15);
+  const [PDF_ROW_HEIGHT] = useState(35);
 
   const [PDF_SELECTED_ROWS_ONLY, SET_PDF_SELECTED_ROWS_ONLY] = useState(false);
-
+  const PDF_ODD_BKG_COLOR = "#f8fafb";
+  const PDF_EVEN_BKG_COLOR= "#ffffff";
   const PDF_HEADER_COLOR = "#f8f8f8";
   const PDF_INNER_BORDER_COLOR = "#dde2eb";
   const PDF_OUTER_BORDER_COLOR = "#babfc7";
@@ -32,7 +33,9 @@ const PDFExportPanel = props => {
       PDF_WITH_FOOTER_PAGE_COUNT,
       PDF_HEADER_HEIGHT,
       PDF_ROW_HEIGHT,
-      PDF_SELECTED_ROWS_ONLY
+      PDF_SELECTED_ROWS_ONLY,
+      PDF_EVEN_BKG_COLOR,
+      PDF_ODD_BKG_COLOR
     };
 
     printDoc(printParams, props.gridApi, props.columnApi);

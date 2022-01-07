@@ -6,7 +6,7 @@ import { simpleHttpRequest } from "ag-grid-community";
 
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import { setGridApi, setColumnApi, setRowData } from './redux/actions/agGrid'
+import { setGridApi, setColumnApi, setRowData, setColumns } from './redux/actions/agGrid'
 
 import { getBids, addBids } from './mybids'
 
@@ -25,7 +25,7 @@ import FilterMenu from './components/FilterMenu/FilterMenu';
 
 function App() {
 
-  const { gridApi, columnApi, rowData } = useSelector(state => state.agGrid)
+  const { gridApi, columnApi, rowData, columns } = useSelector(state => state.agGrid)
 
   const dispatch = useDispatch()
 
@@ -40,7 +40,7 @@ function App() {
     
     dispatch(setGridApi(params.api))
     dispatch(setColumnApi(params.columnApi))
-
+    dispatch(setColumns(params.columnApi))
     getBids().then(res => {
       dispatch(setRowData(res.data))
     })
@@ -123,6 +123,12 @@ function App() {
     setIsVisible(!isVisible)
     columnApi.setColumnVisible('bidqty', isVisible)
   }
+
+  const getAllColumns =() => {
+    const columns = []
+    columnApi.getAllColumns().map(column => columns.push(column.colDef.colId))
+    return columns
+  }
   
   const applyState = () => {
     columnApi.applyColumnState({
@@ -134,6 +140,14 @@ function App() {
       colId: 'resprice',
       hide: true
     }]
+    })
+  }
+  const applyStateShow = () => {
+    columnApi.applyColumnState({
+      state: [{
+        colId: 'bidqty',
+        hide: false
+      }]
     })
   }
 
@@ -149,7 +163,6 @@ function App() {
         <div className="form-wrap">
           <GridOptionsPanel gridApi={gridApi} columnApi={columnApi} />
           <PDFExportPanel gridApi={gridApi} columnApi={columnApi} />
-          
         </div>
         <button type="button" className="btn btn-primary mt-3" onClick={() => saveExcel()}>
           Save Excel
@@ -171,13 +184,18 @@ function App() {
           Save Row
         </button>
         <button type="button" className="btn btn-primary mt-3" onClick={applyState}>
-          Open Column Menu
+          Hide 
+        </button>
+        <button type="button" className="btn btn-primary mt-3" onClick={applyStateShow}>
+          Show
+        </button>
+        <button type="button" className="btn btn-primary mt-3" onClick={getAllColumns}>
+          get all column
         </button>
 
       <CustomizeView />
       <FilterMenu />
       {/* <Accordion /> */}
-      
       <AgGridReact
           rowData={rowData} 
           columnDefs={columnDefs}

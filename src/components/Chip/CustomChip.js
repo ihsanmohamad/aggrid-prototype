@@ -5,6 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Chip, Menu, Paper, InputBase, Divider, IconButton, FormGroup, FormControlLabel, Checkbox} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 
+import { useDispatch,useSelector } from 'react-redux';
+import { getColumns } from '../../redux/actions/agGrid'
+
 const useStyles = makeStyles({
     section: {
         padding: '8px 20px',
@@ -49,18 +52,60 @@ const useStyles = makeStyles({
     }
   })
 
+  const MenuInterface = () => {
+    const classes = useStyles();
+    
+    const { columns } = useSelector(state => state.agGrid)
+    const buto = ['test', 'test']
+    return (
+        <>
+        <InputBase
+        classes={{root: classes.section, input: classes.input}}
+        placeholder="Filter by Bid Status *"
+        inputProps={{ 'aria-label': 'search google maps' }}
+    />
+    <IconButton type="submit" className={classes.iconButton} aria-label="search">
+        <SearchIcon />
+    </IconButton>
+    <Divider className={classes.divider} orientation="horizontal" />
+        <FormGroup row className={classes.checkbox}>
+            {buto.map(() => {
+            <FormControlLabel control={<Checkbox name="test" />} label="test" /> 
+        })}
+        </FormGroup>
+    <Divider className={classes.divider} orientation="horizontal" />
+    <div className={classes.action}>
+        <div>
+        <p>Cancel</p>
+        </div>
+        <div className={classes.item}>
+        <p>Clear</p>
+        <p><strong>Apply</strong></p>
+        </div>
+    </div>
+    </>
+      )
+  }
+
 const CustomChip = (props) => {
     const classes = useStyles();
     
     const [anchorEl, setAnchorEl] = useState(null);
 
+
+    const [test, setTest]  = useState([])
+
+    const dispatch = useDispatch()
+
     const handleClick = (event) => {
+        dispatch(getColumns())
         setAnchorEl(event.currentTarget);
     };
 
     const handleClose = () => {
         setAnchorEl(null);
     };
+     
     return (
         <div>
             <Chip classes={{root: classes.customChip}} {...props} onClick={handleClick}/>
@@ -77,32 +122,7 @@ const CustomChip = (props) => {
                                 horizontal: 'left',
                               }}
             >
-               <InputBase
-                    classes={{root: classes.section, input: classes.input}}
-                    placeholder="Filter by Bid Status *"
-                    inputProps={{ 'aria-label': 'search google maps' }}
-                />
-                <IconButton type="submit" className={classes.iconButton} aria-label="search">
-                    <SearchIcon />
-                </IconButton>
-                <Divider className={classes.divider} orientation="horizontal" />
-                    <FormGroup row className={classes.checkbox}>
-                        <FormControlLabel control={<Checkbox name="checkedC" />} label="Draft" />       
-                        <FormControlLabel control={<Checkbox name="checkedC" />} label="Accepted" />       
-                        <FormControlLabel control={<Checkbox name="checkedC" />} label="Out-bid" />       
-                        <FormControlLabel control={<Checkbox name="checkedC" />} label="Rejected by Bank" />       
-                        
-                    </FormGroup>
-                <Divider className={classes.divider} orientation="horizontal" />
-                <div className={classes.action}>
-                    <div>
-                    <p>Cancel</p>
-                    </div>
-                    <div className={classes.item}>
-                    <p>Clear</p>
-                    <p><strong>Apply</strong></p>
-                    </div>
-                </div>
+              <MenuInterface />
             </Menu>
         </div>
     )

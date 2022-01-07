@@ -41,6 +41,7 @@ export const columnDefs = [
     {
       headerName: "Bidder ID / Name",
       field: "id",
+      colId: "id",
       suppressMovable: true,
       lockPosition: true
     },
@@ -50,5 +51,7 @@ export const columnDefs = [
     { headerName: "Bid Status", field: "bidstatus", colId: "bidstatus"  },
     { headerName: "Ack Code / Bank Ref", field: "ackcode", colId: "ackcode"  },
     { headerName: "Remarks", field: "remarks", colId: "remarks"  },
-    { headerName: "", field: "action", editable: false, colId: "action", cellRendererFramework: params => <ColumnDef params={params} />  },
+    { headerName: "", field: "action", editable: false, colId: "action", pdfExportOptions: {
+      skipColumn: true
+    }, cellRendererFramework: params => <ColumnDef params={params} />  },
 ]

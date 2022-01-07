@@ -4,6 +4,7 @@ export default function getDocDefinition(
     agGridColumnApi
   ) {
     const {
+      PDF_WITH_HEADER_IMAGE,
       PDF_HEADER_COLOR,
       PDF_INNER_BORDER_COLOR,
       PDF_OUTER_BORDER_COLOR,
@@ -32,19 +33,50 @@ export default function getDocDefinition(
         : [columnsToExport, ...rowsToExport];
   
       const headerRows = columnGroupsToExport ? 2 : 1;
+
+      const header = 
+        {
+          image: 'group',
+          width: 150,
+          alignment: 'left',
+          margin: [30, 10, 10, 10],
+        }
   
       const footer = PDF_WITH_FOOTER_PAGE_COUNT
         ? function(currentPage, pageCount) {
             return {
               text: currentPage.toString() + " of " + pageCount,
-              margin: [20]
+              margin: [20],
+              alignment: 'center'
             };
           }
         : null;
   
+        const lineSeparator = {
+                  "type": "line",
+                  "x1": 0,
+                  "y1": 0,
+                  "x2": 535,
+                  "y2": 0,
+                  "lineWidth": 0.5,
+                  "lineColor": "#BDBDBD"
+        }
+
+        const lineSeparator2 = {
+                  "type": "line",
+                  "x1": 0,
+                  "y1": 40,
+                  "x2": 535,
+                  "y2": 40,
+                  "lineWidth": 0.5,
+                  "lineColor": "#BDBDBD"
+        }
+
       const pageMargins = [
-        10,
-        PDF_WITH_FOOTER_PAGE_COUNT ? 40 : 10
+        30,
+        70,
+        30,
+        40
       ];
   
       const heights = rowIndex =>
@@ -75,8 +107,54 @@ export default function getDocDefinition(
   
       const docDefintiion = {
         pageOrientation: PDF_PAGE_ORITENTATION,
+        header,
         footer,
         content: [
+          {
+            canvas: [lineSeparator, lineSeparator2],
+          },
+          {
+            text: 'Submitted Bids',
+            style: 'headerText',
+          },
+          {
+            columns: [
+              [
+                {
+                  text: 'Debiting Account',
+                  style: 'title' 
+                },
+                {
+                  text: 'Current Account 000-000-000-0',
+                  style: 'description'
+                }
+              ],
+              [
+                {
+                  text: 'Debiting Account',
+                  style: 'title' 
+                },
+                {
+                  text: 'Current Account 000-000-000-0',
+                  style: 'description'
+                }
+              ],
+              [
+                {
+                  text: 'Debiting Account',
+                  style: 'title' 
+                },
+                {
+                  text: 'Current Account 000-000-000-0',
+                  style: 'description'
+                }
+              ],
+            ], 
+            columnGap: 20
+          },
+          {
+            text: '25 Submitted Bids'
+          },
           {
             style: "myTable",
             table: {
@@ -94,17 +172,36 @@ export default function getDocDefinition(
             }
           }
         ],
-
+        images: {
+          'group': 'https://raw.githubusercontent.com/AhmedAGadir/ag-grid-todo-list-react-typescript/master/src/assets/new-ag-grid-logo.png'
+        },
         styles: {
           myTable: {
-            margin: [0, 0, 0, 0]
+            margin: [0, 10, 0, 0]
           },
           tableHeader: {
+            fontSize: 10,
             bold: true,
-            margin: [0, PDF_HEADER_HEIGHT / 3, 0, 0]
+            margin: [0, PDF_HEADER_HEIGHT / 3, 0, 0],
+            fillColor: '#08197B',
+            color: '#FFFFFF' 
           },
           tableCell: {
-            // margin: [0, 15, 0, 0]
+            fontSize: 10,
+            margin: [15, 15, 0, 15]
+          },
+          headerText: {
+            fontSize: 15,
+            bold: true,
+            color: '#08197B',
+            margin: [10, -30, 0, 20]
+          },
+          title: {
+            fontSize: 8,
+            opacity: 0.6
+          },
+          description: {
+            fontSize: 10
           }
         },
         pageMargins

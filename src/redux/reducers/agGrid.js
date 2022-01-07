@@ -4,7 +4,8 @@ import axios from 'axios'
 const initialState = {
     gridApi: null,
     columnApi: null,
-    rowData: null
+    rowData: null,
+    columns: []
 }
 
 export const agGridReducer = (state = initialState, { type, payload }) => {
@@ -33,6 +34,15 @@ export const agGridReducer = (state = initialState, { type, payload }) => {
             return {
                 ...state,
                 rowData: [...state.rowData, payload]
+            }
+        case ActionTypes.SET_COLUMNS:
+            return {
+                ...state,
+                columns: payload
+            }
+        case ActionTypes.GET_COLUMNS:
+            return {
+                ...state
             }
         default:
             return state
